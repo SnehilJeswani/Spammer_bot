@@ -1,0 +1,117 @@
+import pygame
+import random
+import time
+pygame.init()
+
+# Variables
+res = (999,699)
+main_Window = pygame.display.set_mode(res)
+fps_Handler = pygame.time.Clock()
+fps = 60
+font = pygame.font.SysFont(None, 30, bold=False, italic=False)
+
+# Functions
+
+def text(main,color,x,y):
+    text = font.render(main,"str",color)
+    main_Window.blit(text,[x,y,20,20])
+
+def welcome():
+    exit = False
+    main_Window.fill("yellow")
+    
+    while not exit:
+        pygame.draw.rect(main_Window,"black",(440, 277, 135, 25))
+        pygame.draw.rect(main_Window,"black",(390, 317, 235, 25))
+        pygame.draw.rect(main_Window,"black",(440, 357, 135, 25))
+        text("Start","white",473,280)
+        text("Load game","white",448,320)
+        text("Quit","white",475,360)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f:
+                    quit_Confirm()
+        pygame.display.update()
+        
+def quit_Confirm():
+    main_Window.fill("red")
+    exit = False
+    while not exit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit = True
+        
+        text("Are you sure to quit ?","white",420,70)
+        pygame.draw.rect(main_Window,"black",(80,435,95,30))
+        pygame.draw.rect(main_Window,"black",(820,435,95,30))
+        text("Yes","white",105,440)
+        text("No","white",850,440)
+        pygame.display.update()
+
+def main_Loop():
+    space_Rocket_X = 450
+    space_Rocket_Y = 600
+    valX = 0
+    val_Bull_X = 0
+    valY = 0
+    bullet_X = space_Rocket_X
+    bullet_Y = space_Rocket_Y
+    bullet_Left = False
+    space_Rocket_Health = 500
+    for i in range(100):
+        alienX = random.randint(20, 900)
+        alienY = -20
+
+    exit = False
+    while not exit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    bullet_Left = True
+                    valY = -1
+                if event.key == pygame.K_RIGHT:
+                    valX = 3
+                    if bullet_Left == False:
+                        val_Bull_X = 3
+                    else:
+                        None
+                if event.key == pygame.K_LEFT:
+                    valX = -3
+                    if bullet_Left == False:
+                        val_Bull_X = -3
+                    else:
+                        None
+        
+        space_Rocket_X += valX
+        alienY += 1
+        bullet_Y += valY
+        bullet_X += val_Bull_X
+        main_Window.fill("white")
+        score = 0
+        
+        if alienY > 699:
+            score+=10
+        score = str(score)
+        text("Your Score: ".__add__(score),"blue",830,50)
+        pygame.draw.rect(main_Window,"yellow",(bullet_X,bullet_Y,20,10))
+        pygame.draw.rect(main_Window,"red",(alienX,alienY,20,20))
+        space_Rocket = pygame.image.load("C:\\Users\\user\\Desktop\\Programming\\Images\\Rocket.png")
+        if abs(space_Rocket_X - alienX) < 20 and abs(space_Rocket_Y - alienY) < 20:
+            space_Rocket_Health = space_Rocket_Health-20
+            
+        if space_Rocket_Health > 200:
+            color = "blue"
+        else:
+            color = "red"
+        # space_Rocket_Health = str(space_Rocket_Health)
+        # text(space_Rocket_Health,color,50,50)
+        space_Rocket = pygame.transform.scale(space_Rocket,(80,80))
+        main_Window.blit(space_Rocket,[space_Rocket_X,space_Rocket_Y,20,20])
+        pygame.display.update()
+        fps_Handler.tick(fps)
+
+main_Loop()
